@@ -64,35 +64,21 @@ template <typename T>
 class Treap
 {
 public:
-	int pris[4] = { 10,25,5,56 };
-	int generatePriority()
+	int generatePriority() const
 	{
 		return rand() % (MAX_PRI - MIN_PRI + 1) + MIN_PRI;
-		//return pris[count++];
 	}
 
 	int count = 0;
 	static const int MIN_PRI = 1;
 	static const int MAX_PRI = 100;
 
-
 	TreapNode<T>* root;
 
-
-	/* Returns pointer to c (new root after rotation)
-	 *
-	 *	       b                c
-	 *		  / \		->     / \
-	 *		 X   c            b   Z
-	 *			/ \		     / \
-	 *		   Y   Z        X   Y
-	 */
-
-public:
 	Treap()
 	{
 		root = nullptr;
-		srand(time(nullptr));
+		srand((int) time(nullptr));
 	}
 
 	void insert(const T& data)
@@ -160,17 +146,22 @@ public:
 
 			if (cursor->pri < pri)
 			{
+				TreapNode<T>* cursorParent = cursor->parent;
 				if (child == cursor->right)	// Need left rotation
 				{
-					if (cursor == cursor->parent->right) cursor->parent->right = rotateLeft(cursor);
-					else cursor->parent->left = rotateLeft(cursor);
+					if (cursor == cursorParent->right) 
+						cursorParent->right = rotateLeft(cursor);
+					else 
+						cursorParent->left = rotateLeft(cursor);
 				}
 				else // Need right rotation
 				{
-					if (cursor == cursor->parent->right) cursor->parent->right = rotateRight(cursor);
-					else cursor->parent->left = rotateRight(cursor);
+					if (cursor == cursorParent->right) 
+						cursorParent->right = rotateRight(cursor);
+					else 
+						cursorParent->left = rotateRight(cursor);
 				}
-				cursor = cursor->parent->parent;
+				cursor = cursorParent;
 			}
 			else
 				break;
@@ -180,6 +171,7 @@ public:
 
 	void remove(const T& data)
 	{
+		// TODO
 	}
 
 

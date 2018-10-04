@@ -104,34 +104,29 @@ TEST(Treap, Search_TwoElementsInserted_BothFound)
 }
 
 
-//TEST(Treap, Search_ThreeElementsInserted_AllFound)
-//{
-//	Treap<int> uut;
-//
-//	uut.insert(0);
-//	uut.insert(1);
-//	uut.insert(2);
-//	uut.insert(3);
-//	ASSERT_TRUE(uut.search(0));
-//	ASSERT_TRUE(uut.search(1));
-//	ASSERT_TRUE(uut.search(2));
-//}
+TEST(Treap, Search_ThreeElementsInserted_AllFound)
+{
+	Treap<int> uut;
+
+	uut.insert(0);
+	uut.insert(1);
+	uut.insert(2);
+	uut.insert(3);
+	ASSERT_TRUE(uut.search(0));
+	ASSERT_TRUE(uut.search(1));
+	ASSERT_TRUE(uut.search(2));
+}
 
 
-//TEST(Treap, Search_ManyElementsInserted_AllFound)
-//{
-//	Treap<int> uut;
-//	bool result = true;
-//
-//	for(int i=0; i< 100; i++)
-//		uut.insert(i);
-//
-//	for (int i = 0; i< 100; i++)
-//	{
-//		result &= uut.search(i);
-//	}
-//
-//	ASSERT_TRUE(result);
-//		
-//
-//}
+TEST(Treap, Search_100ElementsInserted_AllFound)
+{
+	Treap<int> uut;
+	int n = 100;
+
+	for(int i=0; i< n; i++)	uut.insert(i);
+
+	for (int i = 0; i< n; i++)
+		if (!uut.search(i)) ASSERT_TRUE(false);
+
+	ASSERT_TRUE(true);
+}
