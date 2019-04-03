@@ -10,28 +10,40 @@ class Treap
 private:
 	// internal class to represent a Treap node
 	template<typename T>
-	class TreapNode
+	class Node
 	{
 	public:
 		T data;
 		int pri;
-		TreapNode* parent;
-		TreapNode* left;
-		TreapNode* right;
+		Node* parent;
+		Node* left;
+		Node* right;
 
-		TreapNode(const T& d = T(), const int pri = 0, TreapNode* p = nullptr, TreapNode* l = nullptr,
-			TreapNode* r = nullptr) :
+		Node(const T& d = T(), const int pri = 0, Node* p = nullptr, Node* l = nullptr,
+			Node* r = nullptr) :
 			data(d), pri(pri), parent(p), left(l), right(r)
 		{
 		}
 	};
 
 
+
+	// rotateLeft()/rotateRight()
+	// Parameter: Pointer to node to rotate (RR: b, LR: C)
+	// Returns: Pointer to new root after rotation (RR: c, LR: b)
+	//
+	//	       b       R      c
+	//	      / \     ->     / \
+	//	     c   X          Y   b
+	//	    / \        L       / \
+	//	   Y   Z      <-      Z   X
+	//
+	//
 	template<typename T>
-	TreapNode<T>* rotateLeft(TreapNode<T>* b)
+	Node<T>* rotateLeft(Node<T>* b)
 	{
 		if (b == nullptr || b->right == nullptr) return b;
-		TreapNode<T>* c = b->right;
+		Node<T>* c = b->right;
 		b->right = c->left;
 		if (b->right) b->right->parent = b;
 		c->left = b;
@@ -41,21 +53,12 @@ private:
 		return c;
 	}
 
-	// rotateRight()
-	// Returns pointer to c (new root after rotation)
-	//
-	//	       b              c
-	//	      / \            / \
-	//	     c   X    ->    Y   b
-	//	    / \                / \
-	//	   Y   Z              Z   X
-	//
-	//
+
 	template<typename T>
-	TreapNode<T>* rotateRight(TreapNode<T>* b)
+	Node<T>* rotateRight(Node<T>* b)
 	{
 		if (b == nullptr || b->left == nullptr) return b;
-		TreapNode<T>* c = b->left;
+		Node<T>* c = b->left;
 		b->left = c->right;
 		if (b->left) b->left->parent = b;
 		c->right = b;
@@ -66,9 +69,9 @@ private:
 	}
 
 
-	TreapNode<T>* find(const T& data)
+	Node<T>* find(const T& data)
 	{
-		TreapNode<T>* cursor = root;
+		Node<T>* cursor = root;
 		while (true)
 		{
 			if (cursor == nullptr) return nullptr;
@@ -78,26 +81,45 @@ private:
 		}
 	}
 
-	int p = 0;
 
 
-	int generatePriority() 	{
-		int pri = rand() % (MAX_PRI - MIN_PRI + 1) + MIN_PRI;
-		return pri;
+
+	int generatePriority() 	
+	{
+		return rand() % (MAX_PRI - MIN_PRI + 1) + MIN_PRI;
 		//return (p*p)%9;
 	}
 
-	int count = 0;
 	const int MIN_PRI = 1;
 	const int MAX_PRI = 100;
 
 
-	bool isLeftChild(TreapNode<T>* n) { return n != root && n->parent->left == n; }
-	bool isLeaf(TreapNode<T>* n) { return n->left == nullptr && n->right == nullptr;}
+	bool isLeftChild(Node<T>* n) { return n != root && n->parent->left == n; }
+	bool isLeaf(Node<T>* n) { return n->left == nullptr && n->right == nullptr;}
+
+	Node<T>* root;
+
+	int recDepth(Node<T>* root) 
+	{
+		return root ? 1 + std::max(recDepth(root->left), recDepth(root->right)) : 0;
+	}
+
+	int recCount(Node<T>* root)
+	{
+		return root ? 1 + recCount(root->left) + recCount(root->right) : 0;
+	}
 
 public:
 
-	TreapNode<T>* root;
+	int depth()
+	{
+		return recDepth(root);
+	}
+
+	int count()
+	{
+		return recCount(root);
+	}
 
 	Treap()
 	{
@@ -112,13 +134,13 @@ public:
 		// If treap is empty, insert data at root
 		if (!root)
 		{
-			root = new TreapNode<T>(data, pri);
+			root = new Node<T>(data, pri);
 			return;
 		}
 
 		// Find place to insert data and insert it
-		TreapNode<T>* cursor = root;
-		TreapNode<T>* child;
+		Node<T>* cursor = root;
+		Node<T>* child;
 
 		while (true)
 		{
@@ -127,7 +149,7 @@ public:
 			{
 				if (!cursor->left) // Insertion point (leaf) reached
 				{
-					cursor->left = new TreapNode<T>(data, pri, cursor);
+					cursor->left = new Node<T>(data, pri, cursor);
 					child = cursor->left;
 					break;
 				}
@@ -137,7 +159,7 @@ public:
 			{
 				if (!cursor->right) // Insertion point (leaf) reached
 				{
-					cursor->right = new TreapNode<T>(data, pri, cursor);
+					cursor->right = new Node<T>(data, pri, cursor);
 					child = cursor->right;
 					break;
 				}
@@ -170,7 +192,7 @@ public:
 
 			if (cursor->pri < pri)
 			{
-				TreapNode<T>* cursorParent = cursor->parent;
+				Node<T>* cursorParent = cursor->parent;
 				if (child == cursor->right)	// Need left rotation
 				{
 					if (isLeftChild(cursor)) 
@@ -195,7 +217,7 @@ public:
 
 	void remove(const T& data)
 	{
-		TreapNode<T>* toKill = find(data);
+		Node<T>* toKill = find(data);
 		if(toKill == nullptr) return;
 
 		//INV: toKill points to node to remove
@@ -219,7 +241,7 @@ public:
 		if (toKill->left == nullptr || toKill->right == nullptr)
 		{
 			// INV: toKill has a single child
-			TreapNode<T>* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
+			Node<T>* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
 
 			if (toKill == root) root = singleChild;
 			else
@@ -242,7 +264,7 @@ public:
 		
 		while(toKill->left != nullptr && toKill->right != nullptr)	// toKill has two children - rotate further down in treap, always AWAY from higher-priority child
 		{
-			TreapNode<T>* toKillParent = toKill->parent;
+			Node<T>* toKillParent = toKill->parent;
 
 			// INV: toKill is non-root
 			if (toKill->left->pri > toKill->right->pri)
@@ -260,7 +282,7 @@ public:
 		}
 		
 		// Reconnect single child and remove
-		TreapNode<T>* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
+		Node<T>* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
 
 		if (isLeftChild(toKill))
 			toKill->parent->left = singleChild;
