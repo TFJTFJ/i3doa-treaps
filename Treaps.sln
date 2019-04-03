@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Treaps", "Treaps\Treaps.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TreapTest", "TreapTest\TreapTest.vcxproj", "{E2251760-3A25-49F8-8145-72143A294D74}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TreapAnalysis", "TreapAnalysis\TreapAnalysis.vcxproj", "{082461CE-D103-479A-AE51-91F314B86C4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{E2251760-3A25-49F8-8145-72143A294D74}.Release|x64.Build.0 = Release|x64
 		{E2251760-3A25-49F8-8145-72143A294D74}.Release|x86.ActiveCfg = Release|Win32
 		{E2251760-3A25-49F8-8145-72143A294D74}.Release|x86.Build.0 = Release|Win32
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Debug|x64.ActiveCfg = Debug|x64
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Debug|x64.Build.0 = Debug|x64
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Debug|x86.ActiveCfg = Debug|Win32
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Debug|x86.Build.0 = Debug|Win32
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Release|x64.ActiveCfg = Release|x64
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Release|x64.Build.0 = Release|x64
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Release|x86.ActiveCfg = Release|Win32
+		{082461CE-D103-479A-AE51-91F314B86C4A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

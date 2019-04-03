@@ -1,7 +1,9 @@
 #pragma once
 #include <cstdlib>
 #include <ctime>
-#include <ostream>
+#include <algorithm>
+#include <iostream>
+#include<random>
 
 
 template <typename T>
@@ -86,13 +88,9 @@ private:
 
 	int generatePriority() 	
 	{
-		return rand() % (MAX_PRI - MIN_PRI + 1) + MIN_PRI;
-		//return (p*p)%9;
+		int r = static_cast<int>(gen());
+		return r;
 	}
-
-	const int MIN_PRI = 1;
-	const int MAX_PRI = 100;
-
 
 	bool isLeftChild(Node<T>* n) { return n != root && n->parent->left == n; }
 	bool isLeaf(Node<T>* n) { return n->left == nullptr && n->right == nullptr;}
@@ -109,6 +107,18 @@ private:
 		return root ? 1 + recCount(root->left) + recCount(root->right) : 0;
 	}
 
+	void deleteTree(Node<T>* root)
+	{
+		if (root)
+		{
+			deleteTree(root->left);
+			deleteTree(root->right);
+			delete root;
+
+		}
+	}
+
+	std::mt19937_64 gen;
 public:
 
 	int depth()
@@ -121,12 +131,16 @@ public:
 		return recCount(root);
 	}
 
-	Treap()
+	Treap() : gen(std::random_device{}())
 	{
 		root = nullptr;
-		srand(static_cast<int>(time(nullptr)));
+
 	}
 
+	~Treap()
+	{
+		deleteTree(root);
+	}
 	void insert(const T& data)
 	{
 		int pri = generatePriority();
@@ -144,7 +158,11 @@ public:
 
 		while (true)
 		{
-			if (data == cursor->data) return; // Duplicates not allowed
+			if (data == cursor->data)
+			{
+				//std::cout << "Duplicate: " << data << std::endl;
+				return; // Duplicates not allowed
+			}
 			if (data < cursor->data)
 			{
 				if (!cursor->left) // Insertion point (leaf) reached
