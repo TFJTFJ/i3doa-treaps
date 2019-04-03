@@ -29,7 +29,7 @@ int main()
 
 	for (int size = MIN_SIZE; size <= MAX_SIZE; size *=2)	// Test different treap sizes: 1, 2, 4, 8, ..., MAX_SIZE
 	{
-		cout << "Testing size = " << size << endl;
+		cout << "Testing size = " << size << ":\t\t";
 		for (int run = 0; run < TEST_RUNS_PER_SIZE; run++)	// Run a number of times to get different depths for every treap size
 		{
 			Treap<int> treap;
@@ -41,7 +41,9 @@ int main()
 
 			resultfile << treap.count() << ";" << treap.depth() << endl;			// Write results to file
 			resultfile.flush();
+			cout << "*";
 		}
+		cout << " - OK!" << endl;
 	}
 
 	cout << "Done. Results stored in " << OUTPUT_FILE_NAME << endl;

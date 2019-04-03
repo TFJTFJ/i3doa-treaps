@@ -139,10 +139,6 @@ public:
 
 		while (true)
 		{
-			if (data == cursor->data)
-			{
-				return; // Duplicates not allowed
-			}
 			if (data < cursor->data)
 			{
 				if (!cursor->left) // Insertion point (leaf) reached
@@ -153,7 +149,7 @@ public:
 				}
 				cursor = cursor->left; // Keep looking
 			}
-			else
+			else if(data > cursor->data)
 			{
 				if (!cursor->right) // Insertion point (leaf) reached
 				{
@@ -163,6 +159,8 @@ public:
 				}
 				cursor = cursor->right; // Keep looking
 			}
+			else 
+				return;	// duplicates not allowed
 		}
 
 		// INV: Node inserted as leaf. cursor points to the recently inserted node
