@@ -21,6 +21,8 @@ private:
 		Node* left;
 		Node* right;
 
+
+
 		Node(const T& d = T(), const int pri = 0, Node* p = nullptr, Node* l = nullptr,
 			Node* r = nullptr) :
 			data(d), pri(pri), parent(p), left(l), right(r)
@@ -28,7 +30,7 @@ private:
 		}
 	};
 
-
+	std::mt19937_64 randomizer;
 
 	// rotateLeft()/rotateRight()
 	// Parameter: Pointer to node to rotate (RR: b, LR: C)
@@ -86,15 +88,6 @@ private:
 
 
 
-	int generatePriority() 	
-	{
-		int r = static_cast<int>(gen());
-		return r;
-	}
-
-	bool isLeftChild(Node<T>* n) { return n != root && n->parent->left == n; }
-	bool isLeaf(Node<T>* n) { return n->left == nullptr && n->right == nullptr;}
-
 	Node<T>* root;
 
 	int recDepth(Node<T>* root) 
@@ -114,33 +107,21 @@ private:
 			deleteTree(root->left);
 			deleteTree(root->right);
 			delete root;
-
 		}
 	}
 
-	std::mt19937_64 gen;
+	
+	int generatePriority() { return static_cast<int>(randomizer()); }
+	bool isLeftChild(Node<T>* n) { return n != root && n->parent->left == n; }
+	bool isLeaf(Node<T>* n) { return n->left == nullptr && n->right == nullptr; }
+
 public:
 
-	int depth()
-	{
-		return recDepth(root);
-	}
+	int depth() 	{	return recDepth(root);	}
+	int count()		{	return recCount(root);	}
+	~Treap()		{	deleteTree(root);		}
+	Treap()	: randomizer(std::random_device{}()), root(nullptr)	{	}
 
-	int count()
-	{
-		return recCount(root);
-	}
-
-	Treap() : gen(std::random_device{}())
-	{
-		root = nullptr;
-
-	}
-
-	~Treap()
-	{
-		deleteTree(root);
-	}
 	void insert(const T& data)
 	{
 		int pri = generatePriority();
@@ -160,7 +141,6 @@ public:
 		{
 			if (data == cursor->data)
 			{
-				//std::cout << "Duplicate: " << data << std::endl;
 				return; // Duplicates not allowed
 			}
 			if (data < cursor->data)
@@ -316,7 +296,5 @@ public:
 	{
 		return find(data) != nullptr;
 	}
-
-
 
 };
