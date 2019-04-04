@@ -11,8 +11,8 @@ int main()
 {
 	// Analysis parameters. Handle with care!
 	const int MIN_SIZE = 1;					// Should be a power of 2
-	const int MAX_SIZE = 1024*1024*64;		// Should be a power of 2
-	const int TEST_RUNS_PER_SIZE = 8;
+	const int MAX_SIZE = 1024*1024*16;		// Should be a power of 2
+	const int TEST_RUNS_PER_SIZE = 16;
 	
 	const char* OUTPUT_FILE_NAME = "results.txt";
 

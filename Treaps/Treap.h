@@ -11,7 +11,6 @@ class Treap
 {
 private:
 	// internal class to represent a Treap node
-	template<typename T>
 	class Node
 	{
 	public:
@@ -43,11 +42,10 @@ private:
 	//	   Y   Z      <-      Z   X
 	//
 	//
-	template<typename T>
-	Node<T>* rotateLeft(Node<T>* b)
+	Node* rotateLeft(Node* b)
 	{
 		if (b == nullptr || b->right == nullptr) return b;
-		Node<T>* c = b->right;
+		Node* c = b->right;
 		b->right = c->left;
 		if (b->right) b->right->parent = b;
 		c->left = b;
@@ -58,11 +56,10 @@ private:
 	}
 
 
-	template<typename T>
-	Node<T>* rotateRight(Node<T>* b)
+	Node* rotateRight(Node* b)
 	{
 		if (b == nullptr || b->left == nullptr) return b;
-		Node<T>* c = b->left;
+		Node* c = b->left;
 		b->left = c->right;
 		if (b->left) b->left->parent = b;
 		c->right = b;
@@ -73,9 +70,9 @@ private:
 	}
 
 
-	Node<T>* find(const T& data)
+	Node* find(const T& data)
 	{
-		Node<T>* cursor = root;
+		Node* cursor = root;
 		while (true)
 		{
 			if (cursor == nullptr) return nullptr;
@@ -88,19 +85,19 @@ private:
 
 
 
-	Node<T>* root;
+	Node* root;
 
-	int recDepth(Node<T>* root) 
+	int recDepth(Node* root) 
 	{
 		return root ? 1 + std::max(recDepth(root->left), recDepth(root->right)) : 0;
 	}
 
-	int recCount(Node<T>* root)
+	int recCount(Node* root)
 	{
 		return root ? 1 + recCount(root->left) + recCount(root->right) : 0;
 	}
 
-	void deleteTree(Node<T>* root)
+	void deleteTree(Node* root)
 	{
 		if (root)
 		{
@@ -112,8 +109,8 @@ private:
 
 	
 	int generatePriority() { return static_cast<int>(randomizer()); }
-	bool isLeftChild(Node<T>* n) { return n != root && n->parent->left == n; }
-	bool isLeaf(Node<T>* n) { return n->left == nullptr && n->right == nullptr; }
+	bool isLeftChild(Node* n) { return n != root && n->parent->left == n; }
+	bool isLeaf(Node* n) { return n->left == nullptr && n->right == nullptr; }
 
 public:
 
@@ -129,13 +126,13 @@ public:
 		// If treap is empty, insert data at root
 		if (!root)
 		{
-			root = new Node<T>(data, pri);
+			root = new Node(data, pri);
 			return;
 		}
 
 		// Find place to insert data and insert it
-		Node<T>* cursor = root;
-		Node<T>* child;
+		Node* cursor = root;
+		Node* child;
 
 		while (true)
 		{
@@ -143,7 +140,7 @@ public:
 			{
 				if (!cursor->left) // Insertion point (leaf) reached
 				{
-					cursor->left = new Node<T>(data, pri, cursor);
+					cursor->left = new Node(data, pri, cursor);
 					child = cursor->left;
 					break;
 				}
@@ -153,7 +150,7 @@ public:
 			{
 				if (!cursor->right) // Insertion point (leaf) reached
 				{
-					cursor->right = new Node<T>(data, pri, cursor);
+					cursor->right = new Node(data, pri, cursor);
 					child = cursor->right;
 					break;
 				}
@@ -188,7 +185,7 @@ public:
 
 			if (cursor->pri < pri)
 			{
-				Node<T>* cursorParent = cursor->parent;
+				Node* cursorParent = cursor->parent;
 				if (child == cursor->right)	// Need left rotation
 				{
 					if (isLeftChild(cursor)) 
@@ -213,7 +210,7 @@ public:
 
 	void remove(const T& data)
 	{
-		Node<T>* toKill = find(data);
+		Node* toKill = find(data);
 		if(toKill == nullptr) return;
 
 		//INV: toKill points to node to remove
@@ -237,7 +234,7 @@ public:
 		if (toKill->left == nullptr || toKill->right == nullptr)
 		{
 			// INV: toKill has a single child
-			Node<T>* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
+			Node* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
 
 			if (toKill == root) root = singleChild;
 			else
@@ -260,7 +257,7 @@ public:
 		
 		while(toKill->left != nullptr && toKill->right != nullptr)	// toKill has two children - rotate further down in treap, always AWAY from higher-priority child
 		{
-			Node<T>* toKillParent = toKill->parent;
+			Node* toKillParent = toKill->parent;
 
 			// INV: toKill is non-root
 			if (toKill->left->pri > toKill->right->pri)
@@ -278,7 +275,7 @@ public:
 		}
 		
 		// Reconnect single child and remove
-		Node<T>* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
+		Node* singleChild = (toKill->left != nullptr ? toKill->left : toKill->right);
 
 		if (isLeftChild(toKill))
 			toKill->parent->left = singleChild;
